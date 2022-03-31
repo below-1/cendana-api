@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@ministryofjustice/module-alias": "^1.0.21",
-    "@prisma/client": "3.9.0",
+    "@prisma/client": "3.9.1",
     "@sinclair/typebox": "^0.23.4",
     "bcrypt": "^5.0.1",
     "carbone": "^3.2.3",
@@ -32,7 +32,7 @@
     "fluent-json-schema": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
-    "prisma": "3.9.0"
+    "prisma": "3.9.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

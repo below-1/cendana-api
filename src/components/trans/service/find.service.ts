@@ -103,15 +103,7 @@ export async function findTransactions(t: TransType, options: FindOptions) {
   console.log(where);
 
   const countOptions = { where }
-  const totalData = await prisma.transaction.count({
-    where: {
-      AND: [
-        { investmentId: { gt: 0 } },
-        { createdAt: { gt: lowerDate } },
-        { createdAt: { lt: upperDate } }
-      ]
-    }
-  })
+  const totalData = await prisma.transaction.count(countOptions)
   console.log(countOptions)
   console.log(`totalData = ${totalData}`)
 

@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@ministryofjustice/module-alias': ^1.0.21
-  '@prisma/client': 3.9.0
+  '@prisma/client': 3.9.1
   '@sinclair/typebox': ^0.23.4
   '@types/bcrypt': ^5.0.0
   '@types/carbone': ^1.2.1
@@ -24,14 +24,14 @@ specifiers:
   fluent-json-schema: ^3.0.1
   jsonwebtoken: ^8.5.1
   module-alias: ^2.2.2
-  prisma: 3.9.0
+  prisma: 3.9.1
   ts-node: ^10.5.0
   tsconfig-paths: ^3.12.0
   typescript: ^4.6.2
 
 dependencies:
   '@ministryofjustice/module-alias': 1.0.21
-  '@prisma/client': 3.9.0_prisma@3.9.0
+  '@prisma/client': 3.9.1_prisma@3.9.1
   '@sinclair/typebox': 0.23.4
   bcrypt: 5.0.1
   carbone: 3.2.3
@@ -48,7 +48,7 @@ dependencies:
   fluent-json-schema: 3.0.1
   jsonwebtoken: 8.5.1
   module-alias: 2.2.2
-  prisma: 3.9.0
+  prisma: 3.9.1
 
 devDependencies:
   '@types/bcrypt': 5.0.0
@@ -130,8 +130,8 @@ packages:
     resolution: {integrity: sha512-b66MosTmRBz6rng0xYzOUlj/R3Pl0S5qIQHdAJDtJkg2gkqyROydop8u1WbMFoYf3BBdYMvZ1Hlfl/pHtuoQbA==}
     dev: false
 
-  /@prisma/client/3.9.0_prisma@3.9.0:
-    resolution: {integrity: sha512-PByWVI7l+KYUQL/pqR81363qhUh3LhYMIYn2czz5slbt3JC6aAk+Wm7PE9nalqSE6s4xSIYdHj6N0yTNqr86sA==}
+  /@prisma/client/3.9.1_prisma@3.9.1:
+    resolution: {integrity: sha512-aLwfXKLvL+loQ0IuPPCXkcq8cXBg1IeoHHa5lqQu3dJHdj45wnislA/Ny4UxRQjD5FXqrfAb8sWtF+jhdmjFTg==}
     engines: {node: '>=12.6'}
     requiresBuild: true
     peerDependencies:
@@ -141,7 +141,7 @@ packages:
         optional: true
     dependencies:
       '@prisma/engines-version': 3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009
-      prisma: 3.9.0
+      prisma: 3.9.1
     dev: false
 
   /@prisma/engines-version/3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009:
@@ -1139,8 +1139,8 @@ packages:
       sonic-boom: 1.4.1
     dev: false
 
-  /prisma/3.9.0:
-    resolution: {integrity: sha512-KppIukAgJH6o4q9CRYQUqpJUFt8XOK+5eTlv9W+w/SnaSzar+zbT7RCxspCkoGGVSASAQDMYWSKm3QON/o5ENg==}
+  /prisma/3.9.1:
+    resolution: {integrity: sha512-IGcJAu5LzlFv+i+NNhOEh1J1xVVttsVdRBxmrMN7eIH+7mRN6L89Hz1npUAiz4jOpNlHC7n9QwaOYZGxTqlwQw==}
     engines: {node: '>=12.6'}
     hasBin: true
     requiresBuild: true

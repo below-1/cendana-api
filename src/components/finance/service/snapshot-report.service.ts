@@ -98,7 +98,7 @@ export async function snapshotReport(options: ReportOptions) {
         AND t."pengembalianModalFlag" > 0
   `)
 
-  const [ { total: peralatan } ] = await prisma.$queryRawUnsafe<TotalResult>(`   
+  const [ { total: peralatan } ] = await prisma.$queryRawUnsafe<TotalResult>(`
     select coalesce(sum(t.nominal), 0) as total from "Transaction" t 
       where t."createdAt" >= '${t0}' and t."createdAt" <= '${t1}' and t."toolId" > 0`)
 
