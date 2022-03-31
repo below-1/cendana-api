@@ -1,0 +1,313 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+  SUPPLIER
+  STAF
+}
+
+enum OrderType {
+  SALE
+  BUY
+}
+
+enum OrderStatus {
+  OPEN
+  SEALED
+}
+
+enum DelayType {
+  PAYABLE
+  RECEIVABLE
+}
+
+enum TransactionType {
+  DEBIT
+  CREDIT
+}
+
+enum TransactionStatus {
+  NEW
+  CANCELLED
+  FAILED
+  PENDING
+  DECLINED
+  REJECTED
+  SUCCESS
+}
+
+enum PaymentMethod {
+  OFFLINE
+  CASH
+  ON_DELIVERY
+  CHEQUE_DRAFT
+  WIRED
+  ONLINE
+}
+
+model ProductCategory {
+  id              Int            @id @default(autoincrement())
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  title           String         @db.VarChar(255)
+  products        Product[]
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  name     String  @db.VarChar(255)
+  username String?
+  password String?
+  role     Role
+  address  String?
+  mobile   String?
+  email    String?
+
+  createdTransactions Transaction[] @relation("CreatedTransactions")
+  createdOrders       Order[]       @relation("CreatedOrders")
+  createdOrderItems   OrderItem[]   @relation("CreatedOrderItems")
+  createdStockItems   StockItem[]   @relation("CreatedStockItems")
+  targetOrders        Order[]       @relation("OrderTargetUser")
+  createdDelays       Delay[]       @relation("CreatedDelays")
+}
+
+model Product {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @db.VarChar(255)
+
+  buyPrice  Decimal @default(0)
+  sellPrice Decimal @default(0)
+  discount  Int     @default(0)
+
+  available Int @default(0)
+  sold      Int @default(0)
+  defect    Int @default(0)
+  returned  Int @default(0)
+
+  categories   ProductCategory[]
+  stockRecords StockItem[]
+  saleRecords  OrderItem[]
+  unit         String
+}
+
+model StockItem {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author   User @relation("CreatedStockItems", fields: [authorId], references: [id])
+  authorId Int
+
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+
+  order   Order @relation("StockItems", fields: [orderId], references: [id], onDelete: Cascade)
+  orderId Int
+
+  buyPrice  Decimal
+  sellPrice Decimal
+  discount  Int     @default(0)
+
+  quantity        Int            @default(0)
+  available       Int            @default(0)
+  sold            Int            @default(0)
+  defect          Int            @default(0)
+  returned        Int            @default(0)
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author   User @relation("CreatedOrderItems", fields: [authorId], references: [id])
+  authorId Int
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+
+  order   Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId Int
+
+  buyPrice        Decimal
+  sellPrice       Decimal
+  quantity        Int
+  discount        Int            @default(0)
+  description     String?        @db.Text
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author       User         @relation("CreatedOrders", fields: [authorId], references: [id])
+  authorId     Int
+  targetUser   User         @relation("OrderTargetUser", fields: [targetUserId], references: [id])
+  targetUserId Int
+  transaction  Transaction?
+  delay        Delay?
+  orderItems   OrderItem[]
+  stockItems   StockItem[]  @relation("StockItems")
+
+  orderType    OrderType
+  orderStatus  OrderStatus
+  itemDiscount Decimal     @default(0)
+  tax          Int         @default(0)
+  shipping     Decimal     @default(0)
+  total        Decimal     @default(0)
+  subTotal     Decimal     @default(0)
+  grandTotal   Decimal     @default(0)
+  discount     Int         @default(0)
+  promo        String?
+  description  String?     @db.Text
+}
+
+model Delay {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author   User      @relation("CreatedDelays", fields: [authorId], references: [id])
+  authorId Int
+  type     DelayType
+
+  order   Order? @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId Int
+
+  transactions Transaction[]
+
+  dueDate  DateTime
+  total    Decimal
+  complete Boolean
+}
+
+model Transaction {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  author    User     @relation("CreatedTransactions", fields: [authorId], references: [id])
+  authorId  Int
+
+  type          TransactionType
+  status        TransactionStatus
+  paymentMethod PaymentMethod
+  nominal       Decimal
+
+  order           Order?  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId         Int?
+  delay           Delay?  @relation(fields: [delayId], references: [id], onDelete: Cascade)
+  delayId         Int?
+  opex            Opex?   @relation(fields: [opexId], references: [id], onDelete: Cascade)
+  opexId          Int?
+  tool            Tool?   @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  toolId          Int?
+  equityChange    EquityChange?   @relation(fields: [equityChangeId], references: [id], onDelete: Cascade)
+  equityChangeId  Int?
+  investment            Investment?   @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+  investmentId          Int?
+  // Flag to decide whether this is a 'PengembalianModal'
+  pengembalianModalFlag Int?
+
+  description String? @db.Text
+}
+
+model Opex {
+  id           Int           @id @default(autoincrement())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  title        String        @db.VarChar(255)
+  description  String?       @db.Text
+  transactions Transaction[]
+}
+
+model Tool {
+  id          Int           @id @default(autoincrement())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  title       String        @db.VarChar(255)
+  description String?       @db.Text
+  transaction Transaction[]
+}
+
+model RecordProduct {
+  date        DateTime @id @default(now())
+  hpp         Decimal  @default(0)
+  persediaan  Decimal  @default(0)
+}
+
+model EquityChange {
+  id              Int      @id @default(autoincrement())
+  user            String
+  createdAt       DateTime @default(now())
+  transaction     Transaction?
+}
+
+model RecordEquity {
+  id              Int      @id @default(autoincrement())
+  createdAt            DateTime @default(now())
+  nominal         Decimal @default(0)
+}
+
+model Investment {
+  id              Int      @id @default(autoincrement())
+  title           String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  description String?       @db.Text
+  transaction Transaction[]
+}
+
+model FinanceReport {
+  target                DateTime    @id
+
+  totalPenjualan                 Decimal?
+  hppAwal                   Decimal?
+  hppAkhir                   Decimal?
+  hpp                   Decimal?
+  labaKotor             Decimal?
+  opex                  Decimal?
+  labaSebelumPajak      Decimal?
+  pajak                 Decimal?
+  labaBersih            Decimal?
+
+  kas                   Decimal?
+  piutang               Decimal?
+  persediaan            Decimal?
+  aktivaLancar          Decimal?
+
+  peralatan             Decimal?
+  akumulasiPeralatan    Decimal?
+  aktivaTetap           Decimal?
+
+  passiva               Decimal?
+
+  utangDagang           Decimal?
+  modalAwal             Decimal?
+  modalAkhir             Decimal?
+  totalRetur            Decimal?
+  pembelianBarangDagang     Decimal?
+  totalBiayaPengeluaran     Decimal?
+  pajakUsaha                Decimal?
+  prive                 Decimal?
+  kendaraanBaru         Decimal?
+  investasi             Decimal?
+  penambahanModalUsaha  Decimal?
+  roc                   Decimal?
+
+  arusKasOperasional      Decimal?
+  arusKasInvestasi        Decimal?
+}
