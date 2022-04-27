@@ -7,40 +7,19 @@ import {
 
 type Kind = 'PAYABLE' | 'RECEIVABLE' | 'ALL'
 
-export async function findDueToday(kind: Kind) {
-  const today = new Date()
-  console.log(today)
-  // console.log(startOfDay(today))
-  let conditions: any[] = [
-    { dueDate: {
-      gte: startOfDay(today),
-      lte: endOfDay(today)
-    } }
-    // { complete: false }
-  ]
-
-  // switch (kind) {
-  //   case 'PAYABLE':
-  //     conditions.push({
-  //        type: DelayType.PAYABLE
-  //     })
-  //     break;
-  //   case 'RECEIVABLE':
-  //     conditions.push({
-  //        type: DelayType.RECEIVABLE
-  //     })
-  //     break;
-  //   case 'ALL':
-  //     break;
-  //   default:
-  //     throw new Error(`Unknown kind: ${kind}`)
-  // }
-
-  const where = {
-    AND: conditions
-  }
+export async function findDueToday(kind: Kind, date: Date) {
+  const t0 = startOfDay(date)
+  const t1 = endOfDay(date)
+  // const _items = await prisma.delay.findMany()
+  // console.log(_items)
+  // console.log(new Date(2021, 0, 24))
   const items = await prisma.delay.findMany({
-    where,
+    where: {
+      dueDate: {
+        gte: t0,
+        lte: t1
+      }
+    },
     include: {
       order: {
         include: {

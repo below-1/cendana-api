@@ -27,6 +27,7 @@ export async function put(request: PutRequest, reply: Reply) {
 export async function remove(request: DelRequest, reply: Reply) {
   const { id } = request.params
   const trans = await opexTransServices.remove(id)
+  reply.send({ success: true })
 }
 
 export async function getOne(request: DelRequest, reply: Reply) {

@@ -138,11 +138,37 @@ export async function plugin(fastify: FastifyInstance) {
     },
     handler: AdminHandlers.getMany
   })
+
   fastify.delete('/admins/:id', {
     schema: {
       tags: ['admins'],
       params: ID.Obj
     },
     handler: AdminHandlers.remove
+  })
+
+  fastify.get('/admins/:id', {
+    schema: {
+      tags: ['admins'],
+      params: ID.Obj
+    },
+    handler: AdminHandlers.getOne
+  })
+
+  fastify.post('/admins', {
+    schema: {
+      tags: ['admins'],
+      body: DTO.Admin.Create.Obj
+    },
+    handler: AdminHandlers.post
+  })
+
+  fastify.put('/admins/:id', {
+    schema: {
+      tags: ['admins'],
+      params: ID.Obj,
+      body: DTO.Admin.Update.Obj
+    },
+    handler: StafHandlers.put
   })
 }

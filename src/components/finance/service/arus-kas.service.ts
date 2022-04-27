@@ -5,7 +5,7 @@ import * as DTO from '../finance.dto'
 import { print } from '@cend/components/printer'
 import { findReport } from './find-report.service'
 
-export async function neraca(options: DTO.Neraca.Marker) : Promise<any | Buffer> {
+export async function arusKas(options: DTO.ArusKas.Marker) : Promise<any | Buffer> {
   const { respType, ...opts } = options
   const report = await findReport(opts)
   if (respType == 'JSON') {
@@ -16,9 +16,9 @@ export async function neraca(options: DTO.Neraca.Marker) : Promise<any | Buffer>
     d.setFullYear(options.year)
     const data = {
       ...report,
-      periode: format(d, 'dd MMMM yyyy', { locale: localeId })
+      periode: format(d, 'MMMM yyyy', { locale: localeId })
     }
-    const result = await print({ path: 'neraca.docx', data })
+    const result = await print({ path: 'arus_kas.docx', data })
     return result
   }
 }

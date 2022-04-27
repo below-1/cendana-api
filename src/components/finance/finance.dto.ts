@@ -12,11 +12,20 @@ export namespace RespType {
   export type Marker = Static<typeof Obj>
 }
 
+export namespace ArusKas {
+  export const Obj = Type.Object({
+    month: Type.Number(),
+    year: Type.Number(),
+    respType: Type.Enum(RespTypeEnum)
+  })
+  export type Marker = Static<typeof Obj>
+}
+
 export namespace LabaRugi {
   export const Obj = Type.Object({
     month: Type.Number(),
     year: Type.Number(),
-    pajak: Type.Number()
+    respType: Type.Enum(RespTypeEnum)
   })
   export type Marker = Static<typeof Obj>
 }
@@ -25,8 +34,7 @@ export namespace PerubahanModal {
   export const Obj = Type.Object({
     month: Type.Number(),
     year: Type.Number(),
-    prive: Type.Number(),
-    labaBersih: Type.Number()
+    respType: Type.Enum(RespTypeEnum)
   })
   export type Marker = Static<typeof Obj>
 }
@@ -35,8 +43,9 @@ export namespace Neraca {
   export const Obj = Type.Object({
     month: Type.Number(),
     year: Type.Number(),
-    
+    respType: Type.Enum(RespTypeEnum)
   })
+  export type Marker = Static<typeof Obj>
 }
 
 

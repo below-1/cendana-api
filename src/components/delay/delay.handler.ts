@@ -24,6 +24,10 @@ export async function get(request: GetRequest, reply: Reply) {
 
 export async function getDueToday(request: GetDueTodayRequest, reply: Reply) {
   const { kind } = request.query
-  const items = await findDueToday(kind)
+  let today = new Date();
+  if (request.query.date) {
+    today = new Date(request.query.date)
+  }
+  const items = await findDueToday(kind, today)
   reply.send(items)
 }

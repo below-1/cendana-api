@@ -16,6 +16,7 @@ export namespace Find {
 
 export namespace DueToday {
   export const Obj = Type.Object({
+    date: Type.Optional(Type.String({ format: 'date-time' })),
     kind: Type.Union([Type.Literal('PAYABLE'), Type.Literal('RECEIVABLE'), Type.Literal('ALL')])
   })
 

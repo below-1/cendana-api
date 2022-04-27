@@ -36,6 +36,9 @@ export async function findReport(options: ReportOptions) {
 
   return {
     ...report,
-    aktiva
+    aktiva,   
+    perubahanArusKas: report.arusKasOperasional!.add(report.arusKasInvestasi!),
+    saldoAwal: new Decimal(0),
+    saldoAkhir: report.arusKasOperasional!.add(report.arusKasInvestasi!)
   }
 }

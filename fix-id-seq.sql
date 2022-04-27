@@ -1,0 +1,12 @@
+select setval('"Opex_id_seq"', (SELECT MAX(id) from "Opex"));
+select setval('"Delay_id_seq"', (SELECT MAX(id) from "Delay"));
+select setval('"EquityChange_id_seq"', (SELECT MAX(id) from "EquityChange"));
+select setval('"Investment_id_seq"', (SELECT MAX(id) from "Investment"));
+select setval('"OrderItem_id_seq"', (SELECT MAX(id) from "OrderItem"));
+select setval('"Product_id_seq"', (SELECT MAX(id) from "Product"));
+select setval('"ProductCategory_id_seq"', (SELECT MAX(id) from "ProductCategory"));
+select setval('"RecordEquity_id_seq"', (SELECT MAX(id) from "RecordEquity"));
+select setval('"StockItem_id_seq"', (SELECT MAX(id) from "StockItem"));
+select setval('"Tool_id_seq"', (SELECT MAX(id) from "Tool"));
+select setval('"Transaction_id_seq"', (SELECT MAX(id) from "Transaction"));
+select setval('"User_id_seq"', (SELECT MAX(id) from "User"));

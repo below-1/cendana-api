@@ -14,10 +14,10 @@ export async function find(conditions: Conditions, options: FindOptions.Marker) 
   // transform year and month into upper and lower date
   const { month, year } = conditions
   const { lower: lowerDate, upper: upperDate } = toDateUpperLower(year, month)
-  const where = {
+  const where: any = {
     AND: [
       { orderType: OrderType.BUY },
-      { targetUser: { name: { contains: '' } } },
+      { targetUser: { name: { contains: conditions.keyword, mode: 'insensitive' } } },
       { createdAt: {
         gte: lowerDate,
         lte: upperDate

@@ -26,7 +26,6 @@ export async function findTransactions(t: TransType, options: FindOptions) {
   }})
 
   switch (t) {
-
     case TransType.PURCHASE:
       conditions = [
         ...conditions,
@@ -54,7 +53,7 @@ export async function findTransactions(t: TransType, options: FindOptions) {
     case TransType.TOOL:
       conditions = [
         ...conditions,
-        { tool: { title: { contains: options.keyword } } },
+        { tool: { title: { contains: options.keyword, mode: 'insensitive' } } },
         { type: TransactionType.CREDIT }
       ]
       break;
@@ -84,7 +83,12 @@ export async function findTransactions(t: TransType, options: FindOptions) {
     case TransType.EQUITY_CHANGE:
       conditions = [
         ...conditions,
-        { equityChangeId: { gte: 0 } }
+        {
+          equityChangeId: { gte: 0 },
+          equityChange: {
+            user: { contains: options.keyword, mode: 'insensitive' }
+          }
+        }
       ]
       break;
 
@@ -100,7 +104,7 @@ export async function findTransactions(t: TransType, options: FindOptions) {
     AND: conditions
   }
 
-  console.log(where);
+  console.log(JSON.stringify(where));
 
   const countOptions = { where }
   const totalData = await prisma.transaction.count(countOptions)

@@ -1,7 +1,7 @@
 import { prisma } from '@cend/commons/prisma';
 
 export async function remove(id: number) {
-  const transaction = await prisma.transaction.delete({
+  const transaction = await prisma.equityChange.delete({
     where: { id }
   })
   return transaction

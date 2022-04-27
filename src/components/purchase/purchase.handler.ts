@@ -40,8 +40,13 @@ export async function find(request: FindRequest, reply: Reply) {
     year,
     month
   }
-  const result = await services.find(conditions, options);
-  reply.send(result);
+  try {
+    const result = await services.find(conditions, options);
+    reply.send(result);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
 }
 
 export async function seal(request: SealRequest, reply: Reply) {

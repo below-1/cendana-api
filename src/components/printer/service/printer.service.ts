@@ -9,7 +9,20 @@ interface PrintOptions {
 export async function print(options: PrintOptions) {
   const fullPath = join(process.cwd(), 'report', options.path)
   return new Promise<Buffer>((resolve, reject) => {
-    carbone.render(fullPath, options.data, (err, result) => {
+    const carb_options = {
+      lang: 'id',
+      timezone: 'Asia/Makassar',
+      currency: {
+        source: 'IDR',
+        target: 'IDR'
+      }
+    }
+    const now = (new Date()).toISOString()
+    const data = {
+      ...options.data,
+      now
+    }
+    carbone.render(fullPath, data, carb_options, (err, result) => {
       if (err) {
         reject(err)
         return

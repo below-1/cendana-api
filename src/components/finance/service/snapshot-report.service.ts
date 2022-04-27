@@ -12,6 +12,13 @@ import {
 import { id as localeId } from 'date-fns/locale'
 import { TotalResult } from './TotalResult';
 
+class SnapshotReportError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'SnapshotReportError';
+  }
+}
+
 interface ReportOptions {
   month: number;
   year: number;
@@ -41,13 +48,22 @@ export async function snapshotReport(options: ReportOptions) {
         d.type = 'RECEIVABLE'
         and d."createdAt" between '${t0}' and '${t1}'`)
 
-  let [ { total: hppStart } ] = await prisma.$queryRawUnsafe<TotalResult>(`
+  const hppStart_qr = await prisma.$queryRawUnsafe<any>(`
     select coalesce(persediaan, 0) as total 
-      from "RecordProduct" rp where rp."date" = '${t0}'`)
+    from "RecordProduct" rp where rp."date" = '${t0}'`)
+  if (hppStart_qr.length == 0) {
+    throw new SnapshotReportError('HPP_START_EMPTY');
+  }
+  const hppStart = hppStart_qr[0].total;
+  
 
-  let [ { total: hppEnd } ] = await prisma.$queryRawUnsafe<TotalResult>(`
+  const hppEnd_qr = await prisma.$queryRawUnsafe<any>(`
     select coalesce(persediaan, 0) as total 
       from "RecordProduct" rp where rp."date" = '${t1}'`)
+  if (hppEnd_qr.length == 0) {
+    throw new SnapshotReportError('HPP_END_EMPTY');
+  }
+  const hppEnd = hppEnd_qr[0].total;
 
   const [ { total: persediaan } ] = await prisma.$queryRawUnsafe<TotalResult>(`
     select sum(p.available * p."sellPrice") as total from "Product" p`)
@@ -129,7 +145,8 @@ export async function snapshotReport(options: ReportOptions) {
   const labaKotor = totalSale_dec.sub(hpp)
   const labaSebelumPajak = labaKotor.sub(totalOpex_dec)
   const labaBersih = labaSebelumPajak.sub(pajak_dec)
-  const kas = totalSale_dec.sub(totalOpex_dec)
+  // const kas = totalSale_dec.sub(totalOpex_dec)
+  const kas = totalSale_dec
   const modalAkhir = modalAwal_dec.add(labaBersih)
   const penyusutanTool = peralatan_dec.div( endDate.getDate() )
   const totalRetur = new Decimal(0)
@@ -143,7 +160,7 @@ export async function snapshotReport(options: ReportOptions) {
         .add(totalOpex_dec)
         .add(peralatan_dec)
         .add(pajak_dec))
-  const arusKasInvestasi = investment_dec.add(peralatan_dec)
+  const arusKasInvestasi = investment_dec
 
   try {
     await prisma.financeReport.delete({
@@ -200,7 +217,6 @@ export async function snapshotReport(options: ReportOptions) {
 
   // Save next month
   const nextMonth = addMonths(endDate, 1)
-  console.log(nextMonth)
   try {
     await prisma.recordEquity.deleteMany({
       where: {
